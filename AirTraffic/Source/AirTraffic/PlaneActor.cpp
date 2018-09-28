@@ -376,3 +376,8 @@ void APlaneActor::DrawTrajectory()
 	}
 
 }
+
+void APlaneActor::DrawDebugLines(const FVector & Arg1, const FVector & Arg2)
+{
+	DrawDebugLine(GetWorld(), Arg1, Arg2, FColor(255, 0, 0), false, -1, 0, 3.0f);
+}

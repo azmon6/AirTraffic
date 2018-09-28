@@ -70,6 +70,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DrawTrajectory();
 
+	UFUNCTION(BlueprintCallable)
+	void DrawDebugLines(const FVector &Arg1, const FVector &Arg2);
+
 private:
 
 	FTransform StartPos;
