@@ -187,7 +187,6 @@ void APlaneActor::BeginPlay()
 	Super::BeginPlay();
 
 	UE_LOG(LogTemp, Warning, TEXT("I LIVE!"));
-
 }
 
 // Called every frame
@@ -204,6 +203,22 @@ void APlaneActor::Tick(float DeltaTime)
 			this->SetFlightLevel(this->GetEndFlightLevel());
 			this->SetAltitudeChange(0.166666667f);
 		}
+	}
+
+	float temp1 = PlaneRotation.Yaw;
+	float temp3 = EndRotation;
+	if (temp1 < 0.0f) {temp1 = 360.0f + temp1;}
+	if (temp3 < 0.0f) { temp3 = 360.0f + temp3; }
+	if (temp1 != temp3)
+	{
+		this->ChangePointRot(3.0f*DeltaTime*RotationClockwise);
+		if (FMath::Abs(temp1 - temp3) <= 0.3f)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Change yaw. %f"), temp1);
+			PlaneRotation.Yaw = EndRotation;
+		}
+		//UE_LOG(LogTemp, Warning, TEXT("Change endrot. %f"), temp3);
+		//UE_LOG(LogTemp, Warning, TEXT("Change yaw. %f"), temp1);
 	}
 
 	//UE_LOG(LogTemp, Warning, TEXT("Flight Level: %f!"),this->GetFlightLevel());
@@ -242,7 +257,7 @@ void APlaneActor::ChangePointRot(float Value)
 	FVector NewPoint(newX, newY, GetActorLocation().Z);*/
 
 	float Distance = FVector::Dist(GetActorLocation(), GetEndPoint().GetLocation());
-	PlaneRotation = FRotator(0.0f, Value, 0.0f);
+	PlaneRotation = FRotator(0.0f, PlaneRotation.Yaw+Value, 0.0f);
 
 	FVector temp = UKismetMathLibrary::GetForwardVector(PlaneRotation);
 	FVector temp2 = this->GetActorLocation() + temp * GetSpeed() * 60.0f;
@@ -268,11 +283,15 @@ void APlaneActor::PlaneCommandProcessing(TArray<FString> Args)
 
 		if (Args[2] == "LEFT")
 		{
-			ChangePointRot(FCString::Atof(*Args[3]));
+			//ChangePointRot(FCString::Atof(*Args[3]));
+			this->RotationClockwise = -1.0f;
+			this->EndRotation = FCString::Atof(*Args[3]);
 		}
 		else if (Args[2] == "RIGHT")
 		{
-			ChangePointRot(FCString::Atof(*Args[3]));
+			//ChangePointRot(FCString::Atof(*Args[3]));
+			this->RotationClockwise = 1.0f;
+			this->EndRotation = FCString::Atof(*Args[3]);
 		}
 
 		this->EmpthyTrajectory();

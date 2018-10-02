@@ -188,6 +188,7 @@ void AAirTrafficGameMode::FuncCreate(TArray<FString> Args)
 	ref->SetEndFlightLevel(100.0f);
 	ref->SetActorTickEnabled(this->IsGamePaused);
 	ref->RemoveTrajectory();
+	ref->EndRotation = ref->PlaneRotation.Yaw;
 	AddInfoToPlane(ref);
 	PlanesRef.Add(ref);
 

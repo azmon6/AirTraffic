@@ -89,7 +89,11 @@ private:
 	std::queue<FVector> Trajectory;
 
 public:
+
 	UPROPERTY(BlueprintReadWrite)
 	FRotator PlaneRotation;
+
+	float EndRotation=0.0f;
+	float RotationClockwise = 0.0f;
 
 };
